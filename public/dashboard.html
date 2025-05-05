@@ -22,7 +22,7 @@
     async function cargarResumen(mes = '') {
       let url = '/api/dashboard';
       if (mes) {
-        url += `?mes=${mes}`; // Agrega el mes a la query string
+        url += `?mes=${mes}`;
       }
 
       const res = await fetch(url);
@@ -41,7 +41,7 @@
       cargarResumen(mes);
     }
 
-    window.onload = () => cargarResumen(); // Cargar el resumen por defecto
+    window.onload = () => cargarResumen();
   </script>
 </body>
 </html>

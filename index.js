@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CRUD de facturas
 app.get('/api/facturas', (req, res) => {
   db.all('SELECT * FROM facturas ORDER BY fecha DESC', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -50,33 +49,7 @@ app.delete('/api/facturas/:id', (req, res) => {
 });
 
 app.get('/api/dashboard', (req, res) => {
-  db.all(
-    `SELECT strftime('%Y-%m', fecha) as mes, SUM(monto) as total
-     FROM facturas
-     GROUP BY mes
-     ORDER BY mes DESC`,
-    [],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows);
-    }
-  );
-});
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
-});
-
-app.get('/api/dashboard', (req, res) => {
-  const { mes } = req.query; // Obtiene el mes desde la query
+  const { mes } = req.query;
 
   let query = `SELECT strftime('%Y-%m', fecha) as mes, SUM(monto) as total
                FROM facturas
@@ -84,7 +57,6 @@ app.get('/api/dashboard', (req, res) => {
                ORDER BY mes DESC`;
 
   if (mes) {
-    // Si se pasó un mes como parámetro, filtra los resultados por ese mes
     query = `SELECT strftime('%Y-%m', fecha) as mes, SUM(monto) as total
              FROM facturas
              WHERE strftime('%Y-%m', fecha) = ?
@@ -98,3 +70,14 @@ app.get('/api/dashboard', (req, res) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
