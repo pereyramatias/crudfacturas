@@ -1,41 +1,33 @@
-async function login() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ username, password })
-  });
-
+async function cargarFacturas() {
+  const res = await fetch('/api/facturas');
   const data = await res.json();
-  const msg = document.getElementById('message');
-  if (res.ok) {
-    msg.style.color = 'green';
-    msg.textContent = 'Login exitoso. Token: ' + data.token;
-  } else {
-    msg.style.color = 'red';
-    msg.textContent = data.message;
-  }
+  const lista = document.getElementById('lista-facturas');
+  lista.innerHTML = '';
+  data.forEach(factura => {
+    const li = document.createElement('li');
+    li.textContent = `${factura.cliente} - $${factura.monto}`;
+    const btn = document.createElement('button');
+    btn.textContent = 'Eliminar';
+    btn.onclick = () => eliminarFactura(factura.id);
+    li.appendChild(btn);
+    lista.appendChild(li);
+  });
 }
 
-async function register() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  const res = await fetch('/api/auth/register', {
+async function crearFactura() {
+  const cliente = document.getElementById('cliente').value;
+  const monto = document.getElementById('monto').value;
+  await fetch('/api/facturas', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ cliente, monto })
   });
-
-  const data = await res.json();
-  const msg = document.getElementById('message');
-  if (res.ok) {
-    msg.style.color = 'green';
-    msg.textContent = data.message;
-  } else {
-    msg.style.color = 'red';
-    msg.textContent = data.message;
-  }
+  cargarFacturas();
 }
+
+async function eliminarFactura(id) {
+  await fetch('/api/facturas/' + id, { method: 'DELETE' });
+  cargarFacturas();
+}
+
+window.onload = cargarFacturas;
