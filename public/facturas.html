@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Facturas</title>
+</head>
+<body>
+  <h2>Lista de Facturas</h2>
+  <ul id="facturas-lista"></ul>
+
+  <script>
+    async function cargarFacturas() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const res = await fetch('/api/facturas', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+
+      if (res.status === 403 || res.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const facturas = await res.json();
+      const lista = document.getElementById('facturas-lista');
+      facturas.forEach(f => {
+        const li = document.createElement('li');
+        li.textContent = f.descripcion + ' - $' + f.monto;
+        lista.appendChild(li);
+      });
+    }
+
+    cargarFacturas();
+  </script>
+</body>
+</html>
