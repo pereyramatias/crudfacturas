@@ -5,7 +5,7 @@ async function cargarFacturas() {
   lista.innerHTML = '';
   data.forEach(factura => {
     const li = document.createElement('li');
-    li.textContent = `${factura.cliente} - $${factura.monto}`;
+    li.textContent = `${factura.fecha} | ${factura.numero} | ${factura.cliente} - $${factura.monto}`;
     const btn = document.createElement('button');
     btn.textContent = 'Eliminar';
     btn.onclick = () => eliminarFactura(factura.id);
@@ -17,10 +17,12 @@ async function cargarFacturas() {
 async function crearFactura() {
   const cliente = document.getElementById('cliente').value;
   const monto = document.getElementById('monto').value;
+  const fecha = document.getElementById('fecha').value;
+  const numero = document.getElementById('numero').value;
   await fetch('/api/facturas', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ cliente, monto })
+    body: JSON.stringify({ cliente, monto, fecha, numero })
   });
   cargarFacturas();
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Total facturado por mes</h1>
+    <ul id="resumen"></ul>
+    <a href="/">Volver</a>
+  </div>
+  <script>
+    async function cargarResumen() {
+      const res = await fetch('/api/dashboard');
+      const data = await res.json();
+      const lista = document.getElementById('resumen');
+      lista.innerHTML = '';
+      data.forEach(row => {
+        const li = document.createElement('li');
+        li.textContent = `${row.mes}: $${row.total}`;
+        lista.appendChild(li);
+      });
+    }
+    window.onload = cargarResumen;
+  </script>
+</body>
+</html>

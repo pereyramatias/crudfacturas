@@ -5,7 +5,9 @@ db.serialize(() => {
   db.run(`CREATE TABLE IF NOT EXISTS facturas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     cliente TEXT,
-    monto REAL
+    monto REAL,
+    fecha TEXT,
+    numero TEXT
   )`);
 });
 
