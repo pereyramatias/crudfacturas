@@ -1,14 +1,12 @@
-
 CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS facturas (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    descripcion TEXT NOT NULL,
-    monto REAL NOT NULL,
-    usuario_id INTEGER,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    numero_factura INTEGER NOT NULL,
+    fecha DATE NOT NULL,
+    total DECIMAL(10,2) NOT NULL
 );

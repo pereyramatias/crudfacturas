@@ -6,13 +6,13 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const facturaRoutes = require('./routes/facturas');
 const { authMiddleware } = require('./middleware/auth');
+const db = require('./database');  // Esto conecta la base de datos
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Agregá esta línea 👇
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
