@@ -8,12 +8,24 @@
 <body>
   <div class="container">
     <h1>Total facturado por mes</h1>
+    
+    <label for="mes">Selecciona un mes:</label>
+    <input type="month" id="mes" name="mes" />
+
+    <button onclick="filtrarPorMes()">Filtrar</button>
+    
     <ul id="resumen"></ul>
     <a href="/">Volver</a>
   </div>
+
   <script>
-    async function cargarResumen() {
-      const res = await fetch('/api/dashboard');
+    async function cargarResumen(mes = '') {
+      let url = '/api/dashboard';
+      if (mes) {
+        url += `?mes=${mes}`; // Agrega el mes a la query string
+      }
+
+      const res = await fetch(url);
       const data = await res.json();
       const lista = document.getElementById('resumen');
       lista.innerHTML = '';
@@ -23,7 +35,13 @@
         lista.appendChild(li);
       });
     }
-    window.onload = cargarResumen;
+
+    function filtrarPorMes() {
+      const mes = document.getElementById('mes').value;
+      cargarResumen(mes);
+    }
+
+    window.onload = () => cargarResumen(); // Cargar el resumen por defecto
   </script>
 </body>
 </html>

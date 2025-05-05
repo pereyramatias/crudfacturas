@@ -74,3 +74,27 @@ app.get('/dashboard', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
+app.get('/api/dashboard', (req, res) => {
+  const { mes } = req.query; // Obtiene el mes desde la query
+
+  let query = `SELECT strftime('%Y-%m', fecha) as mes, SUM(monto) as total
+               FROM facturas
+               GROUP BY mes
+               ORDER BY mes DESC`;
+
+  if (mes) {
+    // Si se pasó un mes como parámetro, filtra los resultados por ese mes
+    query = `SELECT strftime('%Y-%m', fecha) as mes, SUM(monto) as total
+             FROM facturas
+             WHERE strftime('%Y-%m', fecha) = ?
+             GROUP BY mes
+             ORDER BY mes DESC`;
+  }
+
+  db.all(query, mes ? [mes] : [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
